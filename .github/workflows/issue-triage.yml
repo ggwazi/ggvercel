@@ -1,0 +1,63 @@
+name: Issue Triage
+
+on:
+  issues:
+    types: [opened, labeled]
+
+permissions:
+  issues: write
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-label by keywords
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const title = issue.title.toLowerCase();
+            const body = (issue.body || '').toLowerCase();
+            const text = title + ' ' + body;
+            const labels = new Set();
+
+            if (text.includes('mcp') || text.includes('model context protocol')) labels.add('mcp');
+            if (text.includes('sandbox') || text.includes('code execution')) labels.add('sandbox');
+            if (text.includes('agent') || text.includes('workflow')) labels.add('agents');
+            if (text.includes('dashboard') || text.includes('api')) labels.add('api');
+            if (text.includes('gateway') || text.includes('model')) labels.add('ai-gateway');
+            if (text.includes('crash') || text.includes('error') || text.includes('broken')) labels.add('priority:high');
+            if (text.includes('security') || text.includes('vulnerability')) {
+              labels.add('security');
+              labels.add('priority:critical');
+            }
+
+            if (labels.size > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: Array.from(labels)
+              });
+            }
+
+      - name: Welcome first-time contributors
+        uses: actions/github-script@v7
+        if: github.event.action == 'opened'
+        with:
+          script: |
+            const creator = context.payload.issue.user.login;
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              creator,
+              state: 'all'
+            });
+            if (issues.length === 1) {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: `Welcome @${creator}! Thanks for opening your first issue. A maintainer will review it shortly.`
+              });
+            }

@@ -7,7 +7,11 @@
     "dev": "tsx watch src/index.ts",
     "start": "tsx src/index.ts",
     "build": "tsc",
-    "deploy": "vercel --prod"
+    "deploy": "vercel --prod",
+    "docs": "typedoc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "mcp",
@@ -32,6 +36,8 @@
     "@types/express": "^5.0.6",
     "@types/node": "^22.19.11",
     "tsx": "^4.21.0",
-    "typescript": "^5.9.3"
+    "typedoc": "^0.27.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.3"
   }
 }

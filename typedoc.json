@@ -1,0 +1,12 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["src/index.ts", "src/routes/dashboard.ts", "src/agents/index.ts"],
+  "out": "docs",
+  "plugin": [],
+  "exclude": ["**/*.test.ts", "**/__tests__/**"],
+  "readme": "README.md",
+  "name": "GGVercel MCP Server",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeInternal": true
+}
