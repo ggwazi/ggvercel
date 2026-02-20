@@ -1,0 +1,50 @@
+# Add labels based on file paths
+ci-cd:
+  - changed-files:
+    - any-glob-to-any-file: '.github/workflows/**'
+    - any-glob-to-any-file: '.github/actions/**'
+
+agents:
+  - changed-files:
+    - any-glob-to-any-file: 'src/agents/**'
+
+api:
+  - changed-files:
+    - any-glob-to-any-file: 'src/routes/**'
+
+tools:
+  - changed-files:
+    - any-glob-to-any-file: 'src/tools/**'
+
+mcp:
+  - changed-files:
+    - any-glob-to-any-file: '**/*mcp*'
+    - any-glob-to-any-file: '**/*MCP*'
+
+sandbox:
+  - changed-files:
+    - any-glob-to-any-file: '**/*sandbox*'
+
+tests:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.test.*'
+    - any-glob-to-any-file: '**/*.spec.*'
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.md'
+    - any-glob-to-any-file: 'docs/**'
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file: 'package.json'
+    - any-glob-to-any-file: 'pnpm-lock.yaml'
+
+typescript:
+  - changed-files:
+    - any-glob-to-any-file: '**/*.ts'
+    - any-glob-to-any-file: '**/*.tsx'
+
+schemas:
+  - changed-files:
+    - any-glob-to-any-file: 'schemas/**'

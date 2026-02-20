@@ -1,0 +1,47 @@
+name: Copilot Setup Steps
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/copilot-setup-steps.yml'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+
+jobs:
+  copilot-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      
+      - name: Install dependencies
+        run: pnpm install --ignore-workspace
+      
+      - name: Generate setup steps
+        run: |
+          echo "# Copilot Setup Steps" > .github/COPILOT_SETUP.md
+          echo "" >> .github/COPILOT_SETUP.md
+          echo "1. Install Node.js 22" >> .github/COPILOT_SETUP.md
+          echo "2. Install pnpm: \`npm install -g pnpm\`" >> .github/COPILOT_SETUP.md
+          echo "3. Install dependencies: \`pnpm install --ignore-workspace\`" >> .github/COPILOT_SETUP.md
+          echo "4. Set environment variables in \`.env.local\`:" >> .github/COPILOT_SETUP.md
+          echo "   - AI_GATEWAY_API_KEY" >> .github/COPILOT_SETUP.md
+          echo "   - VERCEL_OIDC_TOKEN (for Vercel deployments)" >> .github/COPILOT_SETUP.md
+          echo "5. Run development server: \`pnpm dev\`" >> .github/COPILOT_SETUP.md
+      
+      - name: Upload setup steps
+        uses: actions/upload-artifact@v4
+        with:
+          name: copilot-setup-steps
+          path: .github/COPILOT_SETUP.md

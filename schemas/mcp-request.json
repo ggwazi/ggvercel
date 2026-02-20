@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MCP Tool Request",
+  "type": "object",
+  "required": ["method"],
+  "properties": {
+    "method": {
+      "type": "string",
+      "enum": ["tools/list", "tools/call", "resources/list", "prompts/list"],
+      "description": "MCP method to call"
+    },
+    "params": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Tool name for tools/call"
+        },
+        "arguments": {
+          "type": "object",
+          "description": "Tool arguments"
+        }
+      }
+    }
+  }
+}

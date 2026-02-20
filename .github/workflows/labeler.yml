@@ -1,0 +1,62 @@
+name: Labeler
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  label:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/labeler@v5
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: .github/labeler.yml
+      
+      - name: Size label
+        uses: pascalgn/size-label-action@v0.5.5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          sizes: >
+            {
+              "XS": 0,
+              "S": 10,
+              "M": 100,
+              "L": 500,
+              "XL": 1000
+            }
+      
+      - name: Path-based labels
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: files } = await github.rest.pulls.listFiles({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            
+            const labels = new Set();
+            for (const file of files) {
+              if (file.filename.includes('.github/workflows/')) labels.add('ci-cd');
+              if (file.filename.startsWith('src/agents/')) labels.add('agents');
+              if (file.filename.startsWith('src/routes/')) labels.add('api');
+              if (file.filename.startsWith('src/tools/')) labels.add('tools');
+              if (file.filename.includes('.test.') || file.filename.includes('.spec.')) labels.add('tests');
+              if (file.filename.includes('mcp') || file.filename.includes('MCP')) labels.add('mcp');
+              if (file.filename.includes('sandbox')) labels.add('sandbox');
+            }
+            
+            if (labels.size > 0) {
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                labels: Array.from(labels)
+              });
+            }

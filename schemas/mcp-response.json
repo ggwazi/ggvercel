@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MCP Tool Response",
+  "type": "object",
+  "required": ["content"],
+  "properties": {
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["type"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["text", "image", "resource"]
+          },
+          "text": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string",
+            "description": "Base64 encoded data for images"
+          },
+          "mimeType": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "isError": {
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

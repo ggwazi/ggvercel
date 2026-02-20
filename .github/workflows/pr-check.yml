@@ -1,0 +1,77 @@
+name: PR Check
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  pr-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: PR Title Check
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            docs
+            style
+            refactor
+            perf
+            test
+            build
+            ci
+            chore
+            revert
+          requireScope: false
+          subjectPattern: ^[A-Z].+$
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}"
+            didn't match the configured pattern. Please ensure that the subject
+            starts with an uppercase character.
+      
+      - name: Check for TODOs
+        run: |
+          if git diff origin/main...HEAD | grep -E '^\+.*TODO|^\+.*FIXME'; then
+            echo "::warning::Found TODOs in the changes"
+          fi
+      
+      - name: Check for secrets
+        run: |
+          if git diff origin/main...HEAD | grep -E '^\+.*password|^\+.*secret|^\+.*api_key|^\+.*token'; then
+            echo "::error::Potential secret detected in changes"
+            exit 1
+          fi
+      
+      - name: Check file sizes
+        run: |
+          max_size=1048576  # 1MB
+          for file in $(git diff --name-only origin/main...HEAD); do
+            if [ -f "$file" ]; then
+              size=$(stat -f%z "$file" 2>/dev/null || stat -c%s "$file" 2>/dev/null || echo 0)
+              if [ "$size" -gt "$max_size" ]; then
+                echo "::error::File $file is too large ($size bytes)"
+                exit 1
+              fi
+            fi
+          done
+
+  conventional-commits:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Validate commits
+        uses: wagoid/commitlint-github-action@v6
+        with:
+          configFile: .commitlintrc.json
+          failOnWarnings: false
+        continue-on-error: true

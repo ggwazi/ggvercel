@@ -1,0 +1,22 @@
+# Auto-assign configuration
+# https://github.com/kentaro-m/auto-assign-action
+
+addAssignees: true
+
+# Set to true to add assignees to PRs
+addReviewers: true
+
+# Number of reviewers to add
+numberOfReviewers: 1
+
+# Use owners from CODEOWNERS file
+useReviewGroups: true
+
+reviewGroups:
+  - name: default
+    reviewers:
+      - '@owner'
+
+# Fallback reviewers if no groups match
+fallbackReviewers:
+  - '@owner'
