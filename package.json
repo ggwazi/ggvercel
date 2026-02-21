@@ -1,43 +1,21 @@
 {
   "name": "ggvercel",
   "version": "1.0.0",
-  "description": "AI-powered MCP Express server with Vercel AI Gateway, Sandbox, and Agentkit examples",
-  "main": "src/index.ts",
-  "scripts": {
-    "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts",
-    "build": "tsc",
-    "deploy": "vercel --prod",
-    "docs": "typedoc",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage"
-  },
-  "keywords": [
-    "mcp",
-    "ai",
-    "vercel",
-    "sandbox",
-    "agentkit"
-  ],
-  "author": "",
-  "license": "MIT",
+  "private": true,
+  "description": "AI-powered MCP Express server monorepo with Vercel AI Gateway, Sandbox, and Agentkit",
   "type": "module",
-  "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.26.0",
-    "@vercel/sandbox": "^1.6.0",
-    "ai": "^6.0.96",
-    "dotenv": "^17.3.1",
-    "express": "^5.2.1",
-    "mcp-handler": "^1.0.7",
-    "zod": "^4.3.6"
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch",
+    "test:coverage": "turbo run test:coverage",
+    "lint": "turbo run lint",
+    "docs": "turbo run docs",
+    "deploy": "vercel --prod"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/node": "^25.3.0",
-    "tsx": "^4.21.0",
-    "typedoc": "^0.28.17",
-    "typescript": "^5.9.3",
-    "vitest": "^4.0.18"
-  }
+    "turbo": "^2.5.0"
+  },
+  "packageManager": "pnpm@9.15.0"
 }
