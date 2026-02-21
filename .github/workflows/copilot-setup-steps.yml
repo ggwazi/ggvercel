@@ -41,7 +41,7 @@ jobs:
           echo "5. Run development server: \`pnpm dev\`" >> .github/COPILOT_SETUP.md
       
       - name: Upload setup steps
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: copilot-setup-steps
           path: .github/COPILOT_SETUP.md
